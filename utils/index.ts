@@ -8,7 +8,7 @@ const saveLocationToJsonFile = (location: Location) => {
   const savedLocation: SavedLocation = {
     location: location!,
     display: AppState.currentState,
-    date: new Date().toLocaleString('he-it')
+    date: new Date().toLocaleString('he')
   }
 
   console.log(savedLocation);

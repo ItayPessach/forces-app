@@ -1,5 +1,6 @@
 import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {MapSampler} from '../types';
+import theme from '../theme'
 interface Props {
   text: string;
   isActive: boolean;
@@ -13,7 +14,7 @@ function MapSamplerButton({text, isActive, mapSampler, onClick}: Props) {
       style={[
         styles.mapSamplerButton,
         isActive
-          ? {backgroundColor: '#67e8f9', transform: [{scale: 0.95}]}
+          ? {backgroundColor: theme.colors.primary, transform: [{scale: 0.95}]}
           : {backgroundColor: 'white'},
       ]}
       onPress={() => onClick(mapSampler)}>

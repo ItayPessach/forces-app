@@ -1,4 +1,5 @@
 import { StyleSheet, Text, View } from 'react-native';
+import theme from '../theme';
 
 function Header() {
    return  (
@@ -11,7 +12,7 @@ function Header() {
 const styles = StyleSheet.create({
     header: {
         height: 60,
-        backgroundColor: '#00C2E8',
+        backgroundColor: theme.colors.primary,
         width: '100%',
         paddingTop: 16
     },
