@@ -109,7 +109,7 @@ dependencies {
     implementation("com.facebook.react:react-android")
     implementation("com.facebook.react:flipper-integration")
 
-    implementation 'com.google.android.gms:play-services-location:21.1.0'
+    implementation 'com.google.android.gms:play-services-location:17.1.0'
 
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
