@@ -1,8 +1,9 @@
-import {useState, useEffect} from 'react';
+import {useState} from 'react';
 import {StyleSheet, Switch, Text, View} from 'react-native';
 import {MapSampler} from '../types';
 import MapSamplerButton from '../components/MapSamplerButton';
-import {saveLocationToJsonFile} from '../utils';
+import SaveLocationBackgroundModule from '../native-modules/SaveLocationBackgroundModule';
+import saveLocationBackgroundModule from '../native-modules/SaveLocationBackgroundModule';
 
 function Body() {
     const [currentMapSampler, setCurrentMapSampler] = useState(
@@ -11,10 +12,30 @@ function Body() {
 
     const [isLocationEnabled, setIsLocationEnabled] = useState(false);
 
+    const setMapSampler = (mapSampler: MapSampler) => {
+        setCurrentMapSampler(mapSampler);
+        if (mapSampler !== currentMapSampler && isLocationEnabled) {
+            if (mapSampler === MapSampler.REACT_NATIVE) {
+                saveLocationBackgroundModule.stopAndroidLocationSampling();
+                saveLocationBackgroundModule.startReactNativeLocationSampling();
+            } else {
+                saveLocationBackgroundModule.stopReactNativeLocationSampling();
+                saveLocationBackgroundModule.startAndroidLocationSampling();
+            }
+        }
+    }
+
     const toggleIsLocationEnabled = async (newValue: boolean) => {
         setIsLocationEnabled(newValue);
         if (newValue) {
-            await saveLocationToJsonFile(currentMapSampler);
+            if (currentMapSampler === MapSampler.REACT_NATIVE) {
+                saveLocationBackgroundModule.startReactNativeLocationSampling()
+            } else {
+                saveLocationBackgroundModule.startAndroidLocationSampling()
+            }
+        } else {
+            SaveLocationBackgroundModule.stopReactNativeLocationSampling();
+            SaveLocationBackgroundModule.stopAndroidLocationSampling();
         }
     };
 
@@ -41,14 +62,14 @@ function Body() {
                         text="Android Native"
                         isActive={currentMapSampler === MapSampler.NATIVE_ANDROID}
                         mapSampler={MapSampler.NATIVE_ANDROID}
-                        onClick={setCurrentMapSampler}
+                        onClick={setMapSampler}
                     />
 
                     <MapSamplerButton
                         text="React Native"
                         isActive={currentMapSampler === MapSampler.REACT_NATIVE}
                         mapSampler={MapSampler.REACT_NATIVE}
-                        onClick={setCurrentMapSampler}
+                        onClick={setMapSampler}
                     />
                 </View>
             </View>

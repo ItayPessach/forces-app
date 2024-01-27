@@ -4,7 +4,22 @@ import {AppState} from 'react-native';
 import FileStorageModule from '../native-modules/FileStorageModule';
 import FusedLocationModule from '../native-modules/FusedLocationModule';
 
-export const getLocationByReactLibrary = async (): Promise<
+const saveLocationToJsonFile = (location: Location) => {
+  const savedLocation: SavedLocation = {
+    location: location!,
+    display: AppState.currentState,
+    date: new Date().toLocaleString('he-it')
+  }
+
+  console.log(savedLocation);
+
+  FileStorageModule.saveDataToFile(
+    JSON.stringify(savedLocation),
+    'locations.json',
+  );
+};
+
+const getLocationByReactLibrary = async (): Promise<
   Location | undefined
 > => {
   try {
@@ -19,32 +34,10 @@ export const getLocationByReactLibrary = async (): Promise<
   }
 };
 
-export const getLocation = async (currentMapSampler: MapSampler) => {
-  if (currentMapSampler === MapSampler.REACT_NATIVE) {
-    return await getLocationByReactLibrary();
-  } else {
-    try {
-      return await FusedLocationModule.getLastLocation();
-    } catch (err: any) {
-      console.error(err.code, err.message);
-    }
-  }
-}
+export const saveReactLocationToJsonFile = async () => {
+  saveLocationToJsonFile((await getLocationByReactLibrary())!);
+};
 
-export const saveLocationToJsonFile = async (currentMapSampler: MapSampler) => {
-  const location = await getLocation(currentMapSampler);
-  console.log(location);
-
-  const savedLocation: SavedLocation = {
-    location: location!,
-    display: AppState.currentState,
-    date: new Date().toLocaleString('he-it')
-  }
-
-  console.log(savedLocation);
-
-  FileStorageModule.saveDataToFile(
-      JSON.stringify(savedLocation),
-      'locations.json',
-  );
-}
+export const saveAndroidLocationToJsonFile = async () => {
+  saveLocationToJsonFile((await FusedLocationModule.getLastLocation())!);
+};

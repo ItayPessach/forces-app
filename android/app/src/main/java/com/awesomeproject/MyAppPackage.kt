@@ -15,5 +15,9 @@ class MyAppPackage : ReactPackage {
 
     override fun createNativeModules(
         reactContext: ReactApplicationContext
-    ): MutableList<NativeModule> = listOf(FileStorageModule(reactContext), FusedLocationModule(reactContext)).toMutableList()
+    ): MutableList<NativeModule> = listOf(
+     FileStorageModule(reactContext),
+     FusedLocationModule(reactContext),
+     SaveLocationBackgroundModule(reactContext)
+     ).toMutableList()
 }
