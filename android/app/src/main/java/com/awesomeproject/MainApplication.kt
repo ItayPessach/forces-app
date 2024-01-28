@@ -1,6 +1,7 @@
 package com.awesomeproject
 
 import android.app.Application
+import android.os.Build
 import com.facebook.react.PackageList
 import com.facebook.react.ReactApplication
 import com.facebook.react.ReactHost
@@ -11,6 +12,9 @@ import com.facebook.react.defaults.DefaultReactHost.getDefaultReactHost
 import com.facebook.react.defaults.DefaultReactNativeHost
 import com.facebook.react.flipper.ReactNativeFlipper
 import com.facebook.soloader.SoLoader
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.content.Context
 
 class MainApplication : Application(), ReactApplication {
 
@@ -41,6 +45,18 @@ class MainApplication : Application(), ReactApplication {
       // If you opted-in for the New Architecture, we load the native entry point for this app.
       load()
     }
+
     ReactNativeFlipper.initializeFlipper(this, reactNativeHost.reactInstanceManager)
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val channel = NotificationChannel(
+            "save_location_channel",
+            "Running Notifications",
+            NotificationManager.IMPORTANCE_HIGH
+        )
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.createNotificationChannel(channel)
+    }
   }
 }

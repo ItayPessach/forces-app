@@ -8,6 +8,7 @@ import android.os.IBinder
 import android.os.Looper
 import com.facebook.react.HeadlessJsTaskService
 import android.os.Bundle;
+import androidx.core.app.NotificationCompat
 
 class ReactNativeLocationService : Service() {
     private lateinit var handler: Handler
@@ -39,7 +40,10 @@ class ReactNativeLocationService : Service() {
         Log.d("ReactNativeLocationService", "react native location service started")
         // Start the task when the service is started
         handler.post(runnable)
-        return START_STICKY
+
+        start()
+
+        return super.onStartCommand(intent, flags, startId)
     }
 
     override fun onDestroy() {
@@ -50,4 +54,16 @@ class ReactNativeLocationService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
+
+    private fun start() {
+        val notification = NotificationCompat.Builder(
+            this,
+            "save_location_channel"
+        )
+         .setContentTitle("Location Sampling")
+         .setContentText("sampling location every 5 minutes")
+         .build()
+
+        startForeground(1, notification)
+    }
 }
